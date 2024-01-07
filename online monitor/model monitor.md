@@ -26,9 +26,25 @@
  *
  2、根据思路，开始动手
   ---
-  ## 从线上log中获取用户输入和输出
+  ### 从线上log中获取用户输入和输出
     grep ‘“input”.*"output"’ 20240102yourlog.log |shuf -n 1000 > 20240102eva.log
-    
+    线上log一般是备份到一个物理机中，分小时存储，一般会存储最近几天的，这里我们通过grep命令来获取当天的某个小时的log
+    随机获取1000条进行评估
+  ### 将获取的log推送到QA的开发机器上
+  配置机器和QA开发机器的免密权限，[https://blog.csdn.net/smillqiang/article/details/126490492]
+  scp 20240102eva.log yourmachineip:root
+  ###  以上两个步骤设置定时任务
+  crontab -e
+  * 15 * * * cd xxx Command 1
+  * 16 * * * Command 2
+  这里我们是每天都跑一下评估
+  ###  使用脚本解析log
+  使用python脚本从我们的log中解析出用户的输入和系统输出字段
+  ###  使用工具来评估用户满意度
+  这里可以使用LLM来辅助我们聘雇
+  ###  统计满意度结果，定期推送到群里
+  设置crontab任务，调用推送消息接口，将每日评估结果发送到业务群中
+  
       
  
   
